@@ -1,0 +1,6 @@
+[submodule "ProjectReact"]
+	path = ProjectReact
+	url = https://github.com/Tulitanir/ProjectReact.git
+[submodule "Project"]
+	path = Project
+	url = https://github.com/Tulitanir/Project.git
