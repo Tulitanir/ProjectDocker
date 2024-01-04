@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  backend:
+    build: ./Project
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/FitnessClub
+      - SPRING_DATASOURCE_USERNAME=test
+      - SPRING_DATASOURCE_PASSWORD=test
+      - PFPS_PATH=/app/pfps
+      - JWT_TOKEN_SECRET=ofit
+      - JWT_TOKEN_EXPIRED=3600000
+      - JWT_refreshToken_expired=2592000000
+      - SPRING_SERVLET_MULTIPART_MAX-FILE-SIZE=10MB
+      - SPRING_SERVLET_MULTIPART_MAX-REQUEST-SIZE=10MB
+    depends_on:
+      - postgres
+      - redis
+  frontend:
+    build: ./ProjectReact
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: "FitnessClub"
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+    volumes:
+      - ./postgres/scripts:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
+
+  redis:
+    image: redis:alpine
+
+    ports:
+      - '6379:6379'
+
+    environment:
+        ALLOW_EMPTY_PASSWORD: "yes"
