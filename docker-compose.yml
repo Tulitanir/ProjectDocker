@@ -5,20 +5,23 @@ services:
     ports:
       - 8080:8080
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/FitnessClub
-      - SPRING_DATASOURCE_USERNAME=test
-      - SPRING_DATASOURCE_PASSWORD=test
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/FitnessClub
+      - spring.datasource.username=test
+      - spring.datasource.password=test
       - PFPS_PATH=/app/pfps
-      - JWT_TOKEN_SECRET=ofit
-      - JWT_TOKEN_EXPIRED=3600000
-      - JWT_refreshToken_expired=2592000000
+      - jwt.token.secret=ofit
+      - jwt.token.expired=3600000
+      - jwt.refreshToken.expired=2592000000
       - SPRING_SERVLET_MULTIPART_MAX-FILE-SIZE=10MB
       - SPRING_SERVLET_MULTIPART_MAX-REQUEST-SIZE=10MB
     depends_on:
       - postgres
       - redis
   frontend:
-    build: ./ProjectReact
+    build:
+      context: ./ProjectReact
+      args:
+        - REACT_APP_API_URL=http://localhost:8080
     ports:
       - 3000:3000
     depends_on:
@@ -32,13 +35,13 @@ services:
     volumes:
       - ./postgres/scripts:/docker-entrypoint-initdb.d
     ports:
-      - '5432:5432'
+      - 5432:5432
 
   redis:
     image: redis:alpine
 
     ports:
-      - '6379:6379'
+      - 6379:6379
 
     environment:
         ALLOW_EMPTY_PASSWORD: "yes"
